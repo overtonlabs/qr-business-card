@@ -1,0 +1,22 @@
+# Keeps the GitHub Actions pins and the dev-only npm dependencies current.
+#
+# This exists because the Pages deploy workflow sat on actions/upload-pages-artifact@v1 for roughly
+# nineteen months after the action it wraps was shut down. Nothing failed visibly because nothing was
+# pushed, so the breakage was only found by an audit. Dependabot turns that class of silent rot into a
+# pull request.
+
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: ci
+
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: deps

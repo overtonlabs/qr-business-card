@@ -1,43 +1,61 @@
-# Simple workflow for deploying static content to GitHub Pages
+# Publishes public/ to GitHub Pages.
+#
+# The site has no build step: the contents of public/ are uploaded verbatim and served as-is. What the
+# tests run against locally is byte-for-byte what gets published.
+#
+# The deploy job depends on the CI workflow, so a commit whose tests fail is never published.
+#
+# Action versions matter here. This workflow was pinned to upload-pages-artifact@v1 until 2026-09,
+# which wraps actions/upload-artifact@v3 - shut down by GitHub on 2025-01-30. The last successful
+# deploy predated the shutdown, so nothing appeared broken while the pipeline was in fact dead. Keep
+# these on supported majors, and let Dependabot (.github/dependabot.yml) keep raising them.
+
 name: Deploy static content to Pages
 
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ["main"]
+    branches: ['main']
 
-  # Allows you to run this workflow manually from the Actions tab
+  # Allows this workflow to be run manually from the Actions tab
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+# Allow one concurrent deployment. In-progress production deploys are allowed to finish.
 concurrency:
-  group: "pages"
+  group: 'pages'
   cancel-in-progress: false
 
 jobs:
-  # Single deploy job since we're just deploying
+  # The full unit and end-to-end suite; publishing is blocked unless this passes
+  test:
+    uses: ./.github/workflows/ci.yml
+
   deploy:
+    needs: test
     environment:
       name: github-pages
-      url: https://steve0verton.github.io/qr-business-card/
+      # Resolved from the Pages configuration rather than hardcoded, so this stays correct across a
+      # repository transfer and does not have to be edited when the custom domain changes.
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
+
       - name: Setup Pages
-        uses: actions/configure-pages@v3
+        uses: actions/configure-pages@v6
+
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v5
         with:
-          # Use /public directory as source
+          # The deployed site is exactly this directory; nothing is generated
           path: 'public'
+
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v5

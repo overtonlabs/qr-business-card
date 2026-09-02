@@ -1,0 +1,16 @@
+# Node tooling (dev only; the deployed site in public/ has no build step)
+node_modules/
+npm-debug.log*
+
+# Browser-automation scratch output from MCP tooling
+.playwright-mcp/
+
+# Playwright run output
+test-results/
+playwright-report/
+
+# Durable session memory, self-ignored but listed here for clarity
+.remember/
+
+# macOS
+.DS_Store

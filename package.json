@@ -1,0 +1,37 @@
+{
+  "name": "qr-business-card",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Generates a QR code containing a vCard, so scanning it opens the contact card natively on any phone. No app, no tracking, no third-party services.",
+  "license": "MIT",
+  "author": "Stephen Overton",
+  "homepage": "https://qrbizcard.net/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/overtonlabs/qr-business-card.git"
+  },
+  "bugs": {
+    "url": "https://github.com/overtonlabs/qr-business-card/issues"
+  },
+  "keywords": [
+    "qrcode",
+    "vcard",
+    "business-card",
+    "contacts",
+    "static-site"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "npm run test:unit && npm run test:e2e",
+    "test:unit": "node --test \"test/unit/**/*.test.js\"",
+    "test:e2e": "playwright test",
+    "serve": "node test/support/static-server.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "jsqr": "^1.4.0"
+  }
+}
