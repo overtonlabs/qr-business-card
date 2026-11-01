@@ -31,7 +31,7 @@
     "serve": "node test/support/static-server.mjs"
   },
   "devDependencies": {
-    "@playwright/test": "^1.56.1",
+    "@playwright/test": "^1.64.1",
     "jsqr": "^1.4.0"
   }
 }
